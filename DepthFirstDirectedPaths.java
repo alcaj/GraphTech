@@ -125,29 +125,37 @@ public class DepthFirstDirectedPaths {
      */
     public static void main(String[] args) {
         In in = new In(args[0]);
-        Digraph G = new Digraph(in);
-        int targetNode = Integer.parseInt(args[2]);
-        // StdOut.println(G);
+        SymbolGraph SG = new SymbolGraph(args[0], " ");
+        Graph G = SG.graph;
+        int s = SG.st.get(args[1]);
+        int targetNode = SG.st.get(args[2]);
 
-        int s = Integer.parseInt(args[1]);
-        DepthFirstDirectedPaths dfs = new DepthFirstDirectedPaths(G, s);
+        EdgeWeightedGraph edgeWeight = new EdgeWeightedGraph(in, SG);
+
+        for (Edge e : edgeWeight.adj(SG.st.get("AL"))) {
+          StdOut.println(e);
+        }
+
+
+        ShortestPathBoi bfs = new ShortestPathBoi(G, s);
 
         for (int v = 0; v < G.V(); v++) {
-            if (dfs.hasPathTo(v) && v == targetNode) {
-                StdOut.printf("%d to %d:  ", s, v);
-                for (int x : dfs.pathTo(v)) {
-                    if (x == s) StdOut.print(x);
-                    else        StdOut.print("-" + x);
+            if (bfs.hasPathTo(v) && v == targetNode) {
+                StdOut.printf("%s to %s (%d):  ", SG.keys[s], SG.keys[v], bfs.distTo(v));
+                for (int x : bfs.pathTo(v)) {
+                    if (x == s) StdOut.print(SG.keys[x]);
+                    else        StdOut.print("-" + SG.keys[x]);
                 }
                 StdOut.println();
             }
 
             else {
-                // StdOut.printf("%d to %d:  not connected\n", s, v);
+                // StdOut.printf("%d to %d (-):  not connected\n", s, v);
             }
 
         }
     }
+
 
 }
 
